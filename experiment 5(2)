@@ -1,0 +1,115 @@
+import java.io.*;
+import java.util.*;
+
+class Employee {
+    private String name;
+    private int id;
+    private String designation;
+    private double salary;
+
+    public Employee(String name, int id, String designation, double salary) {
+        this.name = name;
+        this.id = id;
+        this.designation = designation;
+        this.salary = salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee ID: " + id + ", Name: " + name + ", Designation: " + designation + ", Salary: " + salary;
+    }
+}
+
+public class EmployeeManagement {
+    private static final String FILE_NAME = "employees.txt";
+
+    // Method to add employee details to the file
+    public static void addEmployee(Employee employee) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            writer.write(employee.getId() + "," + employee.getName() + "," + employee.getDesignation() + "," + employee.getSalary());
+            writer.newLine();
+            System.out.println("Employee added successfully!");
+        } catch (IOException e) {
+            System.out.println("An error occurred while adding employee: " + e.getMessage());
+        }
+    }
+
+    // Method to display all employee details from the file
+    public static void displayAllEmployees() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] details = line.split(",");
+                System.out.println("Employee ID: " + details[0] + ", Name: " + details[1] + ", Designation: " + details[2] + ", Salary: " + details[3]);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading employee data: " + e.getMessage());
+        }
+    }
+
+    // Main method for displaying menu and handling user input
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+        
+        while (true) {
+            // Display menu
+            System.out.println("\nEmployee Management System");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Display All Employees");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            option = scanner.nextInt();
+            scanner.nextLine(); // consume newline character
+
+            switch (option) {
+                case 1:
+                    // Add Employee
+                    System.out.print("Enter Employee Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Employee ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // consume newline character
+                    System.out.print("Enter Designation: ");
+                    String designation = scanner.nextLine();
+                    System.out.print("Enter Salary: ");
+                    double salary = scanner.nextDouble();
+
+                    Employee employee = new Employee(name, id, designation, salary);
+                    addEmployee(employee);
+                    break;
+
+                case 2:
+                    // Display all Employees
+                    System.out.println("\nAll Employees:");
+                    displayAllEmployees();
+                    break;
+
+                case 3:
+                    // Exit
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
+        }
+    }
+}
